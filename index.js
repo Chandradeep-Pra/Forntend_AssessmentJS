@@ -1,9 +1,18 @@
+// JQuery
+// var outsideClick = function (e) {
+//    var container = $(".customDrp")
+//    if (!container.is(e.target) && container.has(e.target).length === 0 && container.is(':visible')) {
+//       container.removeClass("active");
+//       $(document).unbind("click", outsideClick);
+//    }
+// };
 
+//JS
 var outsideClick = function (e) {
-   var container = $(".customDrp")
+   var container = document.querySelector(".customDrp");
    if (!container.is(e.target) && container.has(e.target).length === 0 && container.is(':visible')) {
-      container.removeClass("active");
-      $(document).unbind("click", outsideClick);
+      container.classList.remove("active");
+      document.removeEventListener("click", outsideClick);
    }
 };
 
@@ -172,44 +181,78 @@ function buildSearchList(resid, skey, list) {
    document.getElementById("tokensearch2").addEventListener("input", searchToken);
 })();
 
-$(document).ready(function () {
+//$(document).ready(function () {
+(function () {
    // == .custmonDropDwon == //
 
-   $(".custmonDropDwon").click(function (e) {
-      if ($(e.target).hasClass("crossString") || $(e.target).hasClass("bowiro")) {
-         return false;
-      }
+   // $(".custmonDropDwon").click(function (e) {
+   //    if ($(e.target).hasClass("crossString") || $(e.target).hasClass("bowiro")) {
+   //       return false;
+   //    }
 
-      if ($(e.target).is("a")) {
-         return true;
-      }
+   //    if ($(e.target).is("a")) {
+   //       return true;
+   //    }
 
-      e.preventDefault();
+   //    e.preventDefault();
 
-      console.log(e.target);
+   //    console.log(e.target);
 
-      if ($(e.target).hasClass("language") || $(e.target).parent().hasClass("language")) {
-         languageFunc();
+   //    if ($(e.target).hasClass("language") || $(e.target).parent().hasClass("language")) {
+   //       languageFunc();
 
-      }
+   //    }
 
-      if (window.matchMedia('(max-width: 1170px)').matches) {
-         document.body.style.overflow = 'hidden';
-      }
+   //    if (window.matchMedia('(max-width: 1170px)').matches) {
+   //       document.body.style.overflow = 'hidden';
+   //    }
 
-      if ($(e.target).hasClass("searchCoinDrp")) {
-         document.getElementById('tokensearch1').focus();
-      }
+   //    if ($(e.target).hasClass("searchCoinDrp")) {
+   //       document.getElementById('tokensearch1').focus();
+   //    }
 
-      if ($(this).next(".customDrp").length) {
-         $(this).next(".customDrp").addClass("active");
-      } else {
-         $(this).children(".customDrp").addClass("active");
-      }
+   //    if ($(this).next(".customDrp").length) {
+   //       $(this).next(".customDrp").addClass("active");
+   //    } else {
+   //       $(this).children(".customDrp").addClass("active");
+   //    }
 
-      e.stopPropagation();
-      $(document).bind("click", outsideClick);
-   });
+   //    e.stopPropagation();
+   //    $(document).bind("click", outsideClick);
+   // });
+
+   document.addEventListener("DOMContentLoaded",function(){
+      document.querySelectorAll(".customDropDown").forEach(function dropDown(){
+         dropDown.addEventListener("click", function (e){
+            if(e.target.classList.contains("crossString") || e.target.classList.contains("bowiro")){
+               return false;
+            }
+            if(e.target.tagName == "a"){
+               return true
+            }
+            e.preventDefault();
+            console.log(e.target);
+            
+            if(e.target.classList.contains("language") || e.target.parenElement.classList.contains("language")){
+               languageFunc();
+            }
+            if (window.matchMedia('(max-width: 1170px)').matches) {
+                      document.body.style.overflow = 'hidden';
+            }
+            if(e.target.classList.contains("searchCoinDrp")){
+               document.getElementById('tokensearch1').focus();
+            }
+            var customDrp=dropDown.nextElementSibling || dropDown.children[0];
+            if(customDrp){
+               customDrp.classList.add("active");
+            }
+            e.stopPropagation();
+            document.addEventListener("click",outsideClick);
+         })
+      })
+   })
+
+   // -- Mark
 
    // == cardSwiper == //
    // var swiper = new Swiper(".cardSwiper", {
@@ -226,27 +269,52 @@ $(document).ready(function () {
 
    // == basic_banner_read_btn == //
    let basic_banner_read_btn = false;
-   $(".basic_banner_read_btn").click(function () {
-      if (basic_banner_read_btn == false) {
-         $(this).text("Read Less");
-         $(".basic_banner_text").slideToggle(500);
-         basic_banner_read_btn = true;
-      } else {
-         $(".basic_banner_text").slideToggle(500);
-         $(this).text("Read More");
-         basic_banner_read_btn = false;
-      }
-   });
+   // $(".basic_banner_read_btn").click(function () {
+   //    if (basic_banner_read_btn == false) {
+   //       $(this).text("Read Less");
+   //       $(".basic_banner_text").slideToggle(500);
+   //       basic_banner_read_btn = true;
+   //    } else {
+   //       $(".basic_banner_text").slideToggle(500);
+   //       $(this).text("Read More");
+   //       basic_banner_read_btn = false;
+   //    }
+   // });
+   document.querySelector(".basic_banner_read_btn").forEach(function(readBtn){
+      readBtn.addEventListener("click",function(){
+         var basicBannerText=document.querySelector(".basic_banner_text");
+         if(basic_banner_read_btn){
+            readBtn.innerText="Read Less";
+            slideToggle(basicBannerText,500)
+         }
+      })
+   })
+
+   // slideToggle function
+   
+   
 
    // filterToggelBtn
-   $(".filterToggelBtn").click(function () {
-      $(".filterToggel").slideToggle("active");
-   });
+   // $(".filterToggelBtn").click(function () {
+   //    $(".filterToggel").slideToggle("active");
+   // });
+   document.querySelectorAll(".filterToggelBtn").forEach(function(filterToggelBtn){
+      filterToggelBtn.addEventListener("click", function(){
+         document.querySelector(".filterToggel").classList.toggle("active");
+      })
+   })
 
    // ==  .hideCustomDrp == //
-   $(".hideCustomDrp").on("click", function () {
-      $(".customDrp").removeClass("active");
-   });
+   // $(".hideCustomDrp").on("click", function () {
+   //    $(".customDrp").removeClass("active");
+   // });
+   document.querySelectorAll(".hideCustomDrp").forEach(function(hideCustomDrp){
+      hideCustomDrp.addEventListener("click",function(){
+         document.querySelectorAll(".customDrp.active").forEach(function(activeElm){
+            activeElm.classList.remove("active");
+         })
+      })
+   })
 
    // == .customPopup == //
    document.addEventListener(
@@ -267,14 +335,16 @@ $(document).ready(function () {
                document.body.style.overflow = 'hidden';
 
                if (m_ID == "LoginBox") {
-                  $("#login_error").css("display", "none");
-                  $("#login_error").html("");
+                  // $("#login_error").css("display", "none");
+                  // $("#login_error").html("");
+                  document.querySelector("#login_error").style.display="none";
                } else if (m_ID == "signUpBox") {
                   $("#signup_error").css("display", "none");
                   $("#signup_error").html("");
                } else if (m_ID == "ResetPassword") {
-                  $("#fpass_error").css("display", "none");
-                  $("#fpass_error").html("");
+                  let fPassError=document.querySelector("#fpass_error");
+                  fPassError.style.display="none";
+                  fPassError.innerHTML="";
                } else if (m_ID == "selectCurrency") {
                   currencyFunc();
                }
@@ -302,16 +372,25 @@ $(document).ready(function () {
    //   $(this).removeClass("active");
    // });
 
-   $(".closeIcon").click(function () {
-      $(".customPopup").removeClass("active");
-      $(".commonPopup").removeClass("active");
+   // $(".closeIcon").click(function () {
+   //    $(".customPopup").removeClass("active");
+   //    $(".commonPopup").removeClass("active");
 
-      if (!document.querySelector(".headerMain").classList.contains("active")) {
-         document.body.style.overflow = 'auto';
-      }
-   });
+   //    if (!document.querySelector(".headerMain").classList.contains("active")) {
+   //       document.body.style.overflow = 'auto';
+   //    }
+   // });
+   document.querySelectorAll(".closeIcon").forEach(function(closeIcon){
+      closeIcon.addEventListener("click",function(){
+         document.querySelectorAll(".coustomPopup").forEach(function(coustomPopup){
+            customPopup.classList.remove("active");
+         });
+         document.querySelectorAll(".commonPopup").forEach(function(commonPopup){
+            commonPopup.classList.remove("active");
+      })
+   })
 
-   // == responsiveTable mainTable == //
+   == responsiveTable mainTable == //
    $(".mainTable").on("scroll", function (e) {
       let isScroll = e.currentTarget.scrollLeft;
       if (isScroll) {
@@ -320,6 +399,15 @@ $(document).ready(function () {
          $(".ListingTable th:nth-child(3), td:nth-child(3)").removeClass("before");
       }
    });
+   // document.querySelectorAll(".mainTable").forEach(function(mainTable){
+   //    mainTable.addEventListener("scroll",function(e){
+   //       let isScroll=e.currentTarget.scrollLeft;
+   //       if(isScroll){
+
+   //       }
+   //    })
+   // })
+   
    
 
    // ==  responsiveTable currenciesTable == //
@@ -353,19 +441,20 @@ $(document).ready(function () {
    });
 
    // searchPopup
-   $(".header-for-mobile .searchPopup").click(function () {
-      $("body").css({
-         overflow: "hidden",
-      });
-      $(".searchDiv-for-mb").addClass("active");
-   });
+   // $(".header-for-mobile .searchPopup").click(function () {
+   //    $("body").css({
+   //       overflow: "hidden",
+   //    });
+   //    $(".searchDiv-for-mb").addClass("active");
+   // });
 
-   $(".searchpopupHider").click(function () {
-      $("body").css({
-         overflow: "auto",
-      });
-      $(".searchDiv-for-mb").removeClass("active");
-   });
+   // $(".searchpopupHider").click(function () {
+   //    $("body").css({
+   //       overflow: "auto",
+   //    });
+   //    $(".searchDiv-for-mb").removeClass("active");
+   // });
+   
 
    // .gototop Icon Div
    $(function () {
